@@ -8,7 +8,7 @@ dependencies:
   override:
     - docker info
     - if [[ -e ~/docker/image.tar ]]; then docker load --input ~/docker/image.tar; fi
-    - docker build -t miyucy/herokuishm .
+    - docker build --rm=false -t miyucy/herokuishm .
     - mkdir -p ~/docker; docker save miyucy/herokuishm > ~/docker/image.tar
 
 test:
