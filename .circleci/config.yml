@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:stable-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - caches-app-{{ .Branch }}
+      - run: |
+          if [ -f /caches/app.tar ]; then
+            docker load -i /caches/app.tar
+          fi
+          docker build --cache-from miyucy/herokuishm -t miyucy/herokuishm:latest -t "miyucy/herokuishm:${CIRCLE_SHA1}" .
+          mkdir -p /caches
+          docker save -o /caches/app.tar gliderlabs/herokuish:latest miyucy/herokuishm:latest
+      - save_cache:
+          key: caches-app-{{ .Branch }}
+          paths:
+            - /caches/app.tar
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" = "master" ]; then
+              docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+              docker push "miyucy/herokuishm:${CIRCLE_SHA1}"
+            fi
