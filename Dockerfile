@@ -1,4 +1,4 @@
-FROM gliderlabs/herokuish:latest
+FROM gliderlabs/herokuish:v0.3.32
 MAINTAINER fistfvck@gmail.com
 
 COPY bin/compile /tmp/buildpacks/00_buildpack-multi/bin/
