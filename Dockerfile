@@ -1,5 +1,6 @@
 FROM heroku/cedar:14
 
+RUN apt-get update && apt-get -qq -y --force-yes dist-upgrade && apt-get clean && rm -rf /var/cache/apt/archives/*
 RUN addgroup --quiet --gid "32767" "herokuishuser" \
  && adduser \
     --shell /bin/bash \
