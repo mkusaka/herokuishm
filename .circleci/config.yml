@@ -10,7 +10,10 @@ jobs:
       - setup_remote_docker
       - run: |
           docker build -t "${REPO_NAME}:latest" -t "${REPO_NAME}:${CIRCLE_SHA1}" .
-          cat <(printf "FROM %s\n" "${REPO_NAME}:${CIRCLE_SHA1}") Dockerfile.test.t > Dockerfile.test
+          f=$(mktemp)
+          printf "FROM %s\n" "${REPO_NAME}:${CIRCLE_SHA1}" >> "${f}"
+          cat Dockerfile.test.t >> "${f}"
+          mv "${f}" Dockerfile.test
           docker build -t "${REPO_NAME}:test" -f Dockerfile.test .
           docker run --rm "${REPO_NAME}:test"
       - deploy:
