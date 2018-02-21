@@ -1,0 +1,16 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "cowsay start",
+    "heroku-postbuild": "cowsay heroku-postbuild"
+  },
+  "private": true,
+  "engines": {
+    "node": "9.4.0",
+    "yarn": "1.3.2"
+  },
+  "dependencies": {
+    "cowsay": "^1.2.1"
+  }
+}
