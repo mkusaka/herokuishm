@@ -1,5 +1,6 @@
 FROM heroku/cedar:14
 
+RUN apt-get update && apt-get -qq -y --force-yes dist-upgrade && apt-get clean && rm -rf /var/cache/apt/archives/*
 RUN addgroup --quiet --gid "32767" "herokuishuser" \
  && adduser \
     --shell /bin/bash \
@@ -32,5 +33,5 @@ RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.
 
 ADD heroku-buildpack-multi /tmp/buildpacks/00_buildpack-multi
 
-RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v173 01_buildpack-ruby \
- && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v114 02_buildpack-nodejs
+RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v174 01_buildpack-ruby \
+ && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v118 02_buildpack-nodejs
