@@ -25,7 +25,7 @@ RUN JEMALLOC_URL="https://github.com/jemalloc/jemalloc/releases/download/4.5.0/j
  && rm -rf /tmp/jemalloc-4.5.0 \
  && ls -l /usr/lib/libjemalloc.so.2
 
-RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.3.33/herokuish_0.3.33_linux_x86_64.tgz" \
+RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.3.35/herokuish_0.3.35_linux_x86_64.tgz" \
  && curl --silent -L $HEROKUISH_URL | tar -xzC /bin \
  && ln -s /bin/herokuish /build \
  && ln -s /bin/herokuish /start \
