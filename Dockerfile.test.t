@@ -1,3 +1,5 @@
-ADD app /tmp/app
+# -*- mode: dockerfile -*-
+ADD slug.tgz /app
 ENV LD_PRELOAD="/usr/lib/libjemalloc.so.2"
-CMD ["/bin/herokuish", "test"]
+ADD test.sh /
+CMD ["bash", "/test.sh"]
