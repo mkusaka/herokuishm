@@ -9,10 +9,10 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: |
-          docker pull heroku/heroku:16
           docker pull heroku/heroku:16-build
+          docker pull heroku/heroku:16
       - run: |
-          docker build -t "${REPO_NAME}:latest-build" -t "${REPO_NAME}:${CIRCLE_SHA1}-build" -f Dockerfile.build .
+          docker build --squash -t "${REPO_NAME}:latest-build" -t "${REPO_NAME}:${CIRCLE_SHA1}-build" -f Dockerfile.build .
           f=$(mktemp)
           printf "FROM %s\n" "${REPO_NAME}:${CIRCLE_SHA1}-build" >> "${f}"
           cat Dockerfile.buildtest.t >> "${f}"
@@ -20,9 +20,9 @@ jobs:
           docker build -t "${REPO_NAME}:buildtest" -f Dockerfile.buildtest .
           docker run -d --name buildtest "${REPO_NAME}:buildtest" /bin/bash
           docker cp -L buildtest:/tmp/slug.tgz .
-          ls -al slug.tgz # tar tf slug.tgz
+          ls -l slug.tgz # tar tf slug.tgz
       - run: |
-          docker build -t "${REPO_NAME}:latest" -t "${REPO_NAME}:${CIRCLE_SHA1}" -f Dockerfile .
+          docker build --squash -t "${REPO_NAME}:latest" -t "${REPO_NAME}:${CIRCLE_SHA1}" -f Dockerfile .
           f=$(mktemp)
           printf "FROM %s\n" "${REPO_NAME}:${CIRCLE_SHA1}" >> "${f}"
           cat Dockerfile.test.t >> "${f}"
