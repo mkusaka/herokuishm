@@ -36,4 +36,4 @@ RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.
 ADD heroku-buildpack-multi /tmp/buildpacks/00_buildpack-multi
 
 RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v174 01_buildpack-ruby \
- && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v118 02_buildpack-nodejs
+ && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v123 02_buildpack-nodejs
