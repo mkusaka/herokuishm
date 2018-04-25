@@ -27,7 +27,7 @@ RUN addgroup --quiet --gid "32767" "herokuishuser" \
 
 ENV STACK=heroku-16
 
-RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.0/herokuish_0.4.0_linux_x86_64.tgz" \
+RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.1/herokuish_0.4.1_linux_x86_64.tgz" \
  && curl --silent -L $HEROKUISH_URL | tar -xzC /bin \
  && ln -s /bin/herokuish /build \
  && ln -s /bin/herokuish /start \
@@ -35,5 +35,5 @@ RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.
 
 ADD heroku-buildpack-multi /tmp/buildpacks/00_buildpack-multi
 
-RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v177 01_buildpack-ruby \
+RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v182 01_buildpack-ruby \
  && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v123 02_buildpack-nodejs
