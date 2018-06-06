@@ -46,7 +46,7 @@ RUN addgroup --quiet --gid "32767" "herokuishuser" \
 
 ENV STACK=heroku-16
 
-RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.1/herokuish_0.4.1_linux_x86_64.tgz" \
+RUN HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.2/herokuish_0.4.2_linux_x86_64.tgz" \
  && curl --silent -L $HEROKUISH_URL | tar -xzC /bin \
  && ln -s /bin/herokuish /build \
  && ln -s /bin/herokuish /start \
