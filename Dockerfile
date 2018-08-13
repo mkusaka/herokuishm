@@ -1,14 +1,14 @@
-FROM heroku/heroku:16
+FROM heroku/heroku:18
 
 ENV DEBIAN_FRONTEND="noninteractive" \
-    STACK="heroku-16"
+    STACK="heroku-18"
 
 RUN apt-get -qq update \
  && apt-get -qq -y --force-yes dist-upgrade \
  && apt-get -qq -y --no-install-recommends install \
-      daemontools=1:0.76-6ubuntu1 \
-      libjemalloc1=3.6.0-9ubuntu1 \
-      pigz=2.3.1-2 \
+      daemontools=1:0.76-6.1 \
+      libjemalloc1=3.6.0-11 \
+      pigz=2.4-1 \
  && apt-get clean \
  && rm -rf /var/cache/apt/archives/* \
  && addgroup --quiet --gid "32767" "herokuishuser" \

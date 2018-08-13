@@ -2,8 +2,8 @@
   "name": "app",
   "version": "0.0.1",
   "scripts": {
-    "start": "cowsay start",
-    "heroku-postbuild": "cowsay heroku-postbuild"
+    "start": "cowsay -r start | cat",
+    "heroku-postbuild": "cowsay -r heroku-postbuild | cat"
   },
   "private": true,
   "engines": {
@@ -11,6 +11,6 @@
     "yarn": "*"
   },
   "dependencies": {
-    "cowsay": "^1.2.1"
+    "cowsay": "^1.3.1"
   }
 }

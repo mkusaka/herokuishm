@@ -1,4 +1,6 @@
 #!/bin/bash
+find /app -type f -print0 | xargs -0 cat > /dev/null
+
 /start web &
 
 function do_curl {
@@ -6,7 +8,7 @@ function do_curl {
 }
 
 function establish {
-  local retries=5
+  local retries=15
   local count=0
 
   while [ ${count} -lt ${retries} ]
@@ -23,7 +25,7 @@ function establish {
 establish
 
 function do_test {
-  local retries=5
+  local retries=15
   local count=0
 
   while [ ${count} -lt ${retries} ]
