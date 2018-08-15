@@ -9,6 +9,9 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: |
+          docker pull heroku/heroku:18-build
+          docker pull heroku/heroku:18
+      - run: |
           docker build -t "${REPO_NAME}:latest-build" -t "${REPO_NAME}:${CIRCLE_SHA1}-build" -f Dockerfile.build .
       - run: |
           docker build -t "${REPO_NAME}:latest" -t "${REPO_NAME}:${CIRCLE_SHA1}" -f Dockerfile .

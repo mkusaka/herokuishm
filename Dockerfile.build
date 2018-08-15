@@ -1,15 +1,15 @@
 # -*- mode: dockerfile -*-
-FROM heroku/heroku:16-build
+FROM heroku/heroku:18-build
 
 ENV DEBIAN_FRONTEND="noninteractive" \
-    STACK="heroku-16"
+    STACK="heroku-18"
 
 RUN apt-get -qq update \
  && apt-get -qq -y --force-yes dist-upgrade \
  && apt-get -qq -y --no-install-recommends install \
-      daemontools=1:0.76-6ubuntu1 \
-      libjemalloc1=3.6.0-9ubuntu1 \
-      pigz=2.3.1-2 \
+      daemontools=1:0.76-6.1 \
+      libjemalloc1=3.6.0-11 \
+      pigz=2.4-1 \
  && apt-get clean \
  && rm -rf /var/cache/apt/archives/* \
  && addgroup --quiet --gid "32767" "herokuishuser" \
@@ -32,5 +32,5 @@ RUN apt-get -qq update \
 
 COPY heroku-buildpack-multi /tmp/buildpacks/00_buildpack-multi
 
-RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v189 01_buildpack-ruby \
+RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v190 01_buildpack-ruby \
  && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v123 02_buildpack-nodejs
