@@ -24,7 +24,7 @@ RUN apt-get -qq update \
     --quiet \
     --home "/app" \
     "herokuishuser" \
- && HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.2/herokuish_0.4.2_linux_x86_64.tgz" \
+ && HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.4/herokuish_0.4.4_linux_x86_64.tgz" \
  && curl --silent --location $HEROKUISH_URL | tar -xzC /bin \
  && ln -s /bin/herokuish /build \
  && ln -s /bin/herokuish /start \
@@ -32,5 +32,5 @@ RUN apt-get -qq update \
 
 COPY heroku-buildpack-multi /tmp/buildpacks/00_buildpack-multi
 
-RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v190 01_buildpack-ruby \
- && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v123 02_buildpack-nodejs
+RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v191 01_buildpack-ruby \
+ && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v126 02_buildpack-nodejs
