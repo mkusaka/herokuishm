@@ -9,15 +9,12 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: |
-          docker pull heroku/heroku:18-build
-          docker pull heroku/heroku:18
-      - run: |
           docker build -t "${REPO_NAME}:latest-build" -t "${REPO_NAME}:${CIRCLE_SHA1}-build" -f Dockerfile.build .
       - run: |
           docker build -t "${REPO_NAME}:latest" -t "${REPO_NAME}:${CIRCLE_SHA1}" -f Dockerfile .
       - run: |
-          cat Dockerfile.test.t | sed -e "s|<REPO_NAME>|${REPO_NAME}|g" | sed -e "s|<CIRCLE_SHA1>|${CIRCLE_SHA1}|g" > Dockerfile.test
-          docker build -t "${REPO_NAME}:test" -f Dockerfile.test .
+          cat Dockerfile.test | sed -e "s|<REPO_NAME>|${REPO_NAME}|g" | sed -e "s|<CIRCLE_SHA1>|${CIRCLE_SHA1}|g" | docker build -t "${REPO_NAME}:test" -f - .
+      - run: |
           docker run -e PORT=5959 -e USER=herokuishuser "${REPO_NAME}:test"
       - deploy:
           command: |
