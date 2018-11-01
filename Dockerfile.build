@@ -32,5 +32,5 @@ RUN apt-get -qq update \
 
 COPY heroku-buildpack-multi /tmp/buildpacks/00_buildpack-multi
 
-RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v193 01_buildpack-ruby \
- && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v128 02_buildpack-nodejs
+RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v196 01_buildpack-ruby \
+ && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v130 02_buildpack-nodejs
