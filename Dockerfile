@@ -23,7 +23,7 @@ RUN apt-get -qq update \
     --quiet \
     --home "/app" \
     "herokuishuser" \
- && HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.4/herokuish_0.4.4_linux_x86_64.tgz" \
+ && HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.5/herokuish_0.4.5_linux_x86_64.tgz" \
  && curl --silent --location $HEROKUISH_URL | tar -xzC /bin \
  && ln -s /bin/herokuish /build \
  && ln -s /bin/herokuish /start \
