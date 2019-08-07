@@ -3,7 +3,14 @@ FROM heroku/heroku:18
 ENV DEBIAN_FRONTEND="noninteractive" \
     STACK="heroku-18"
 
-RUN apt-get -qq update \
+RUN apt-mark hold \
+    imagemagick \
+    imagemagick-6-common \
+    imagemagick-6.q16 \
+    libmagickcore-6.q16-3-extra \
+    libmagickcore-6.q16-3 \
+    libmagickwand-6.q16-3 \
+ && apt-get -qq update \
  && apt-get -qq -y --force-yes dist-upgrade \
  && apt-get -qq -y --no-install-recommends install \
       daemontools=1:0.76-6.1 \
