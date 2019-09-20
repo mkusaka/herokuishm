@@ -1,18 +1,16 @@
 # -*- mode: dockerfile -*-
 FROM heroku/heroku:18-build
 
-ENV DEBIAN_FRONTEND="noninteractive" \
-    STACK="heroku-18"
+ENV DEBIAN_FRONTEND="noninteractive"
 
-RUN apt-mark hold \
-    imagemagick \
-    imagemagick-6-common \
-    imagemagick-6.q16 \
-    libmagickcore-6.q16-3-extra \
-    libmagickcore-6.q16-3 \
-    libmagickwand-6.q16-3 \
- && apt-get -qq update \
- && apt-get -qq -y --force-yes dist-upgrade \
+RUN apt-get -qq update \
+ && cp /etc/ImageMagick-6/policy.xml /etc/ImageMagick-6/policy.xml.custom \
+ && apt-get \
+      -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confnew \
+      --allow-downgrades \
+      --allow-remove-essential \
+      --allow-change-held-packages \
+      dist-upgrade \
  && apt-get -qq -y --no-install-recommends install \
       daemontools=1:0.76-6.1 \
       libjemalloc1=3.6.0-11 \
@@ -31,7 +29,7 @@ RUN apt-mark hold \
     --quiet \
     --home "/app" \
     "herokuishuser" \
- && HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.4.5/herokuish_0.4.5_linux_x86_64.tgz" \
+ && HEROKUISH_URL="https://github.com/gliderlabs/herokuish/releases/download/v0.5.3/herokuish_0.5.3_linux_x86_64.tgz" \
  && curl --silent --location $HEROKUISH_URL | tar -xzC /bin \
  && ln -s /bin/herokuish /build \
  && ln -s /bin/herokuish /start \
@@ -39,5 +37,5 @@ RUN apt-mark hold \
 
 COPY heroku-buildpack-multi /tmp/buildpacks/00_buildpack-multi
 
-RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v201 01_buildpack-ruby \
- && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v159 02_buildpack-nodejs
+RUN /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-ruby   v204 01_buildpack-ruby \
+ && /bin/herokuish buildpack install https://github.com/heroku/heroku-buildpack-nodejs v162 02_buildpack-nodejs
