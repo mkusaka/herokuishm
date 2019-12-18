@@ -67,10 +67,11 @@ done
 if [[ -e "$BUILD_DIR/last_pack_release.out" ]]; then
   pushd "$BUILD_DIR"
   if [[ -d vendor/bundle/ ]]; then
-    zip -r -0 /tmp/vendor-bundle.zip vendor/bundle/ &> /dev/null
+    tar -C vendor/bundle/ -c -f /tmp/vendor-bundle.tgz --use-compress-program pigz --preserve-permissions --dereference --hard-dereference .
     rm -rf vendor/bundle/
-    unzip -o -d . /tmp/vendor-bundle.zip &> /dev/null
-    rm -f /tmp/vendor-bundle.zip
+    mkdir -p vendor/bundle/
+    tar -C vendor/bundle/ -x -z -f /tmp/vendor-bundle.tgz
+    rm -f /tmp/vendor-bundle.tgz
   fi
   popd
 fi

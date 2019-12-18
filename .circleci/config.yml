@@ -5,27 +5,37 @@ jobs:
       - image: docker:stable-git
         environment:
           - REPO_NAME=miyucy/herokuishm
+          - DOCKER_BUILDKIT=1
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 18.09.3
       - run: |
-          docker build -t "${REPO_NAME}:latest-build" -t "${REPO_NAME}:${CIRCLE_SHA1}-build" -f Dockerfile.build .
+          docker build --progress plain -t minid:latest -f Dockerfile.minid .
       - run: |
-          docker build -t "${REPO_NAME}:latest" -t "${REPO_NAME}:${CIRCLE_SHA1}" -f Dockerfile .
+          date -u '+%Y%m%d%H%M%S' > TAG_NAME
+          echo "TAG_NAME=$(cat TAG_NAME)"
       - run: |
-          cat Dockerfile.test | sed -e "s|<REPO_NAME>|${REPO_NAME}|g" | sed -e "s|<CIRCLE_SHA1>|${CIRCLE_SHA1}|g" | docker build -t "${REPO_NAME}:test" -f - .
+          TAG_NAME=$(cat TAG_NAME)
+          cat Dockerfile.build | \
+          docker run -i --rm minid:latest minid -f - | \
+          docker build --progress plain -t "${REPO_NAME}:${TAG_NAME}-build" -f - .
+      - run: |
+          TAG_NAME=$(cat TAG_NAME)
+          cat Dockerfile | \
+          docker run -i --rm minid:latest minid -f - | \
+          docker build --progress plain -t "${REPO_NAME}:${TAG_NAME}" -f - .
+      - run: |
+          TAG_NAME=$(cat TAG_NAME)
+          cat Dockerfile.test | sed -e "s|<REPO_NAME>|${REPO_NAME}|g" | sed -e "s|<TAG_NAME>|${TAG_NAME}|g" | docker build --progress plain -t "${REPO_NAME}:test" -f - .
       - run: |
           docker run -e PORT=5959 -e USER=herokuishuser "${REPO_NAME}:test"
       - deploy:
           command: |
-            TAG_NAME=$(date -u '+%Y%m%d%H%M%S')
-            docker tag "${REPO_NAME}:latest" "${REPO_NAME}:${TAG_NAME}"
-            docker tag "${REPO_NAME}:latest-build" "${REPO_NAME}:${TAG_NAME}-build"
             docker images "${REPO_NAME}"
             if [ "${CIRCLE_BRANCH}" = "master" ]; then
+              TAG_NAME=$(cat TAG_NAME)
               docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
-              docker push "${REPO_NAME}:latest"
               docker push "${REPO_NAME}:${TAG_NAME}"
-              docker push "${REPO_NAME}:latest-build"
               docker push "${REPO_NAME}:${TAG_NAME}-build"
             fi

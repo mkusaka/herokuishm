@@ -1,6 +1,6 @@
 # -*- mode: dockerfile -*-
 ### stage0
-FROM <REPO_NAME>:<CIRCLE_SHA1>-build as build
+FROM <REPO_NAME>:<TAG_NAME>-build as build
 
 COPY app /tmp/build
 RUN TEMP_FILE=$(mktemp) \
@@ -9,7 +9,7 @@ RUN TEMP_FILE=$(mktemp) \
  && /bin/herokuish slug generate
 
 ### stage1
-FROM <REPO_NAME>:<CIRCLE_SHA1>
+FROM <REPO_NAME>:<TAG_NAME>
 
 COPY --from=build /tmp/slug.tgz /tmp
 RUN mkdir -p /app \
