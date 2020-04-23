@@ -1,2 +1,3 @@
-FROM golang:1.10-stretch
+# syntax = docker/dockerfile:experimental
+FROM golang:1.14-stretch
 RUN go get -u github.com/orisano/minid
