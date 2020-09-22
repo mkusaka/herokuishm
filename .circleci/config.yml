@@ -11,19 +11,15 @@ jobs:
       - setup_remote_docker:
           version: 18.09.3
       - run: |
-          docker build --progress plain -t minid:latest -f Dockerfile.minid .
-      - run: |
           date -u '+%Y%m%d%H%M%S' > TAG_NAME
           echo "TAG_NAME=$(cat TAG_NAME)"
       - run: |
           TAG_NAME=$(cat TAG_NAME)
           cat Dockerfile.build | \
-          docker run -i --rm minid:latest minid -f - | \
           docker build --progress plain -t "${REPO_NAME}:${TAG_NAME}-build" -f - .
       - run: |
           TAG_NAME=$(cat TAG_NAME)
           cat Dockerfile | \
-          docker run -i --rm minid:latest minid -f - | \
           docker build --progress plain -t "${REPO_NAME}:${TAG_NAME}" -f - .
       - run: |
           TAG_NAME=$(cat TAG_NAME)
