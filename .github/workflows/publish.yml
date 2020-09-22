@@ -1,0 +1,43 @@
+name: Publish Docker image
+# on:
+#   push:
+#     branches:
+#       - master
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+            - run: |
+          docker build --progress plain -t minid:latest -f Dockerfile.minid .
+      - run: |
+          echo "ghcr.io/$(date -u '+%Y%m%d%H%M%S')" > TAG_NAME
+          echo "TAG_NAME=$(cat TAG_NAME)"
+      - run: |
+          TAG_NAME=$(cat TAG_NAME)
+          cat Dockerfile.build | \
+          docker run -i --rm minid:latest minid -f - | \
+          docker build --progress plain -t "${{ github.repository }}:${TAG_NAME}-build" -f - .
+      - run: |
+          TAG_NAME=$(cat TAG_NAME)
+          cat Dockerfile | \
+          docker run -i --rm minid:latest minid -f - | \
+          docker build --progress plain -t "${{ github.repository }}:${TAG_NAME}" -f - .
+      - run: |
+          TAG_NAME=$(cat TAG_NAME)
+          cat Dockerfile.test | sed -e "s|<REPO_NAME>|${{ github.repository }}|g" | sed -e "s|<TAG_NAME>|${TAG_NAME}|g" | docker build --progress plain -t "${{ github.repository }}:test" -f - .
+      - run: |
+          docker run -e PORT=5959 -e USER=herokuishuser "${{ github.repository }}:test"
+      - deploy:
+          command: |
+            docker images "${{ github.repository }}"
+            TAG_NAME=$(cat TAG_NAME)
+            docker login -u "${{ github.actor }}" -p "${{ secrets.CONTAINER_REGISTRY_TOKEN }}" ghcr.io
+            docker push "${{ github.repository }}:${TAG_NAME}"
+            docker push "${{ github.repository }}:${TAG_NAME}-build"
+        env:
+          - DOCKER_BUILDKIT=1
+
