@@ -13,20 +13,20 @@ jobs:
     #   DOCKER_BUILDKIT: 1
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          docker build --progress plain -t minid:latest -f Dockerfile.minid .
+      # - run: |
+      #     docker build --progress plain -t minid:latest -f Dockerfile.minid .
       - run: |
           echo "ghcr.io/$(date -u '+%Y%m%d%H%M%S')" > TAG_NAME
           echo "TAG_NAME=$(cat TAG_NAME)"
       - run: |
           TAG_NAME=$(cat TAG_NAME)
           cat Dockerfile.build | \
-          docker run -i --rm minid:latest minid -f - | \
+          # docker run -i --rm minid:latest minid -f - | \
           docker build --progress plain -t "${{ github.repository }}:${TAG_NAME}-build" -f - .
       - run: |
           TAG_NAME=$(cat TAG_NAME)
           cat Dockerfile | \
-          docker run -i --rm minid:latest minid -f - | \
+          # docker run -i --rm minid:latest minid -f - | \
           docker build --progress plain -t "${{ github.repository }}:${TAG_NAME}" -f - .
       - run: |
           TAG_NAME=$(cat TAG_NAME)
