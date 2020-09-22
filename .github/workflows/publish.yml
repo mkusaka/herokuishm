@@ -1,17 +1,19 @@
 name: Publish Docker image
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master
 
 on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
     steps:
       - uses: actions/checkout@v2
-            - run: |
+      - run: |
           docker build --progress plain -t minid:latest -f Dockerfile.minid .
       - run: |
           echo "ghcr.io/$(date -u '+%Y%m%d%H%M%S')" > TAG_NAME
@@ -38,6 +40,3 @@ jobs:
             docker login -u "${{ github.actor }}" -p "${{ secrets.CONTAINER_REGISTRY_TOKEN }}" ghcr.io
             docker push "${{ github.repository }}:${TAG_NAME}"
             docker push "${{ github.repository }}:${TAG_NAME}-build"
-        env:
-          - DOCKER_BUILDKIT=1
-
