@@ -9,33 +9,33 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    # env:
-    #   DOCKER_BUILDKIT: 1
+    env:
+      DOCKER_BUILDKIT: 1
     steps:
       - uses: actions/checkout@v2
       # - run: |
       #     docker build --progress plain -t minid:latest -f Dockerfile.minid .
       - run: |
-          echo "ghcr.io/$(date -u '+%Y%m%d%H%M%S')" > TAG_NAME
+          echo "$(date -u '+%Y%m%d%H%M%S')" > TAG_NAME
           echo "TAG_NAME=$(cat TAG_NAME)"
       - run: |
           TAG_NAME=$(cat TAG_NAME)
           cat Dockerfile.build | \
           # docker run -i --rm minid:latest minid -f - | \
-          docker build --progress plain -t "${{ github.repository }}:${TAG_NAME}-build" -f - .
+          docker build --progress plain -t "ghcr.io/${{ github.repository }}:${TAG_NAME}-build" -f - .
       - run: |
           TAG_NAME=$(cat TAG_NAME)
           cat Dockerfile | \
           # docker run -i --rm minid:latest minid -f - | \
-          docker build --progress plain -t "${{ github.repository }}:${TAG_NAME}" -f - .
+          docker build --progress plain -t "ghcr.io/${{ github.repository }}:${TAG_NAME}" -f - .
       - run: |
           TAG_NAME=$(cat TAG_NAME)
-          cat Dockerfile.test | sed -e "s|<REPO_NAME>|${{ github.repository }}|g" | sed -e "s|<TAG_NAME>|${TAG_NAME}|g" | docker build --progress plain -t "${{ github.repository }}:test" -f - .
+          cat Dockerfile.test | sed -e "s|<REPO_NAME>|ghcr.io/${{ github.repository }}|g" | sed -e "s|<TAG_NAME>|${TAG_NAME}|g" | docker build --progress plain -t "ghcr.io/${{ github.repository }}:test" -f - .
       - run: |
-          docker run -e PORT=5959 -e USER=herokuishuser "${{ github.repository }}:test"
+          docker run -e PORT=5959 -e USER=herokuishuser "ghcr.io/${{ github.repository }}:test"
       - run: |
-          docker images "${{ github.repository }}"
+          docker images "ghcr.io/${{ github.repository }}"
           TAG_NAME=$(cat TAG_NAME)
           docker login -u "${{ github.actor }}" -p "${{ secrets.CONTAINER_REGISTRY_TOKEN }}" ghcr.io
-          docker push "${{ github.repository }}:${TAG_NAME}"
-          docker push "${{ github.repository }}:${TAG_NAME}-build"
+          docker push "ghcr.io/${{ github.repository }}:${TAG_NAME}"
+          docker push "ghcr.io/${{ github.repository }}:${TAG_NAME}-build"
