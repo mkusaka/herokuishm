@@ -36,6 +36,6 @@ jobs:
       - run: |
           docker images "ghcr.io/${{ github.repository }}"
           TAG_NAME=$(cat TAG_NAME)
-          docker login -u "${{ github.actor }}" -p "${{ secrets.CONTAINER_REGISTRY_TOKEN }}" ghcr.io
+          docker login -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}" ghcr.io
           docker push "ghcr.io/${{ github.repository }}:${TAG_NAME}"
           docker push "ghcr.io/${{ github.repository }}:${TAG_NAME}-build"
